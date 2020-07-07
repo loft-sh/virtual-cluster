@@ -2,7 +2,7 @@
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: vc-{{ .Release.Name }}-v-{{ .Release.Namespace }}
+  name: {{ template "virtualcluster.clusterRoleName" . }}
   labels:
     app: virtualcluster
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -14,6 +14,6 @@ subjects:
     namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
-  name: vc-{{ .Release.Name }}-v-{{ .Release.Namespace }}
+  name: {{ template "virtualcluster.clusterRoleName" . }}
   apiGroup: rbac.authorization.k8s.io
 {{- end }}
