@@ -16,5 +16,5 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: {{ template "virtualcluster.fullname" . }}
+    app: virtualcluster
     release: "{{ .Release.Name }}"

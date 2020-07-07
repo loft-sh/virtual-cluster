@@ -16,5 +16,5 @@ spec:
       targetPort: 8443
       protocol: TCP
   selector:
-    app: {{ template "virtualcluster.fullname" . }}
+    app: virtualcluster
     release: {{ .Release.Name }}

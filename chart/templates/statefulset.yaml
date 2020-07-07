@@ -4,8 +4,7 @@ metadata:
   name: {{ template "virtualcluster.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    virtualcluster.loft.sh: "true"
-    app: {{ template "virtualcluster.fullname" . }}
+    app: virtualcluster
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -14,8 +13,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      virtualcluster.loft.sh: "true"
-      app: {{ template "virtualcluster.fullname" . }}
+      app: virtualcluster
       release: {{ .Release.Name }}
   volumeClaimTemplates:
     - metadata:
@@ -28,8 +26,7 @@ spec:
   template:
     metadata:
       labels:
-        virtualcluster.loft.sh: "true"
-        app: {{ template "virtualcluster.fullname" . }}
+        app: virtualcluster
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 10

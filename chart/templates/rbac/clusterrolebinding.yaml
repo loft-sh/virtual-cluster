@@ -4,7 +4,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: vc-{{ .Release.Name }}-v-{{ .Release.Namespace }}
   labels:
-    app: {{ template "virtualcluster.fullname" . }}
+    app: virtualcluster
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
