@@ -38,7 +38,6 @@ storage:
   mountPath: /data
 
 serviceAccount:
-  name: virtualcluster
   create: true
 
 rbac:

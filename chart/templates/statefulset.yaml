@@ -33,7 +33,7 @@ spec:
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 10
-      serviceAccountName: {{ template "virtualcluster.serviceAccountName" . }}
+      serviceAccountName: vc-{{ .Release.Name }}
       containers:
       - image: {{ .Values.virtualCluster.image }}
         name: virtual-cluster

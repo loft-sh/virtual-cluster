@@ -11,7 +11,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
 subjects:
   - kind: ServiceAccount
-    name: {{ template "virtualcluster.serviceAccountName" . }}
+    name: vc-{{ .Release.Name }}
     namespace: {{ .Release.Namespace }}
 roleRef:
   kind: Role

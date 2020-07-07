@@ -47,17 +47,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "virtualcluster.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-{{ default (include "virtualcluster.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-{{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Get
 */}}
 {{- $}}
