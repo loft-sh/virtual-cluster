@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "virtualcluster.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    virtualcluster.loft.sh: "true"
+    app: {{ template "virtualcluster.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  serviceName: {{ .Release.Name }}-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      virtualcluster.loft.sh: "true"
+      app: {{ template "virtualcluster.fullname" . }}
+      release: {{ .Release.Name }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.storage.size }}
+  template:
+    metadata:
+      labels:
+        virtualcluster.loft.sh: "true"
+        app: {{ template "virtualcluster.fullname" . }}
+        release: {{ .Release.Name }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: vc-{{ .Release.Name }}
+      containers:
+      - image: {{ .Values.virtualCluster.image }}
+        name: virtual-cluster
+        command:
+          {{- range $f := .Values.virtualCluster.command }}
+          - {{ $f | quote }}
+          {{- end }}
+        args:
+          {{- range $f := .Values.virtualCluster.baseArgs }}
+          - {{ $f | quote }}
+          {{- end }}
+          {{- range $f := .Values.virtualCluster.extraArgs }}
+          - {{ $f | quote }}
+          {{- end }}
+        env:
+{{ toYaml .Values.virtualCluster.env | indent 10 }}
+        volumeMounts:
+{{ toYaml .Values.virtualCluster.volumeMounts | indent 10 }}
+        resources:
+{{ toYaml .Values.virtualCluster.resources | indent 10 }}
+      - name: syncer
+        image: {{ .Values.syncer.image }}
+        args:
+          - --service-name={{ .Release.Name }}
+          - --suffix={{ .Release.Name }}
+          {{- range $f := .Values.syncer.extraArgs }}
+          - {{ $f | quote }}
+          {{- end }}
+        env:
+{{ toYaml .Values.syncer.env | indent 10 }}
+        volumeMounts:
+{{ toYaml .Values.syncer.volumeMounts | indent 10 }}
+        resources:
+{{ toYaml .Values.syncer.resources | indent 10 }}
