@@ -53,10 +53,11 @@ spec:
 {{ toYaml .Values.virtualCluster.resources | indent 10 }}
       - name: syncer
         {{- if .Values.syncer.image }}
-        image: "{{ .Values.image }}"
+        image: "{{ .Values.syncer.image }}"
         {{- else }}
         image: "loftsh/virtual-cluster:{{ .Chart.Version }}"
         {{- end }}
+        {{- if not .Values.syncer.noArgs }}
         args:
           - --service-name={{ .Release.Name }}
           - --suffix={{ .Release.Name }}
@@ -64,6 +65,7 @@ spec:
           {{- range $f := .Values.syncer.extraArgs }}
           - {{ $f | quote }}
           {{- end }}
+        {{- end }}
         env:
 {{ toYaml .Values.syncer.env | indent 10 }}
         volumeMounts:
