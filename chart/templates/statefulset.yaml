@@ -52,7 +52,11 @@ spec:
         resources:
 {{ toYaml .Values.virtualCluster.resources | indent 10 }}
       - name: syncer
-        image: {{ .Values.syncer.image }}
+        {{- if .Values.syncer.image }}
+        image: "{{ .Values.image }}"
+        {{- else }}
+        image: "loftsh/virtual-cluster:{{ .Chart.Version }}"
+        {{- end }}
         args:
           - --service-name={{ .Release.Name }}
           - --suffix={{ .Release.Name }}
