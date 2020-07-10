@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "virtualcluster.fullname" . }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: virtualcluster
@@ -61,6 +61,7 @@ spec:
         args:
           - --service-name={{ .Release.Name }}
           - --suffix={{ .Release.Name }}
+          - --owning-statefulset={{ .Release.Name }}
           - --out-kube-config-secret=vc-{{ .Release.Name }}
           {{- range $f := .Values.syncer.extraArgs }}
           - {{ $f | quote }}
