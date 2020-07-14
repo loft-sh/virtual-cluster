@@ -66,6 +66,9 @@ spec:
           {{- range $f := .Values.syncer.extraArgs }}
           - {{ $f | quote }}
           {{- end }}
+        {{- else }}
+        args:
+{{ toYaml .Values.syncer.extraArgs | indent 10 }}
         {{- end }}
         env:
 {{ toYaml .Values.syncer.env | indent 10 }}
