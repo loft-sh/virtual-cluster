@@ -24,6 +24,8 @@ an instance of a virtual cluster hypervisor which is mainly responsible for sync
 
 ## Install
 
+For a one click solution take a look at [loft](https://loft.sh). For the manual install process without loft follow the guide below.
+
 ### Find out host cluster Service CIDR
 
 In order to install virtual cluster you need to find out the Service CIDR of your host cluster. This can be done by creating a service with a faulty ClusterIP in the host cluster:
@@ -53,7 +55,7 @@ The error message shows the correct Service CIDR of the cluster, in this case `1
 
 To start a new virtual cluster in any given namespace, you can use helm.
 
-Create a values.yaml with:
+Create a values.yaml depending on your host cluster kubernetes version:
 <details>
 <summary><b>Host Kubernetes v1.16</b></summary>
 <br>
@@ -145,3 +147,44 @@ helm install virtualcluster virtualcluster --repo https://charts.devspace.sh/ \
   --wait
 ```
 
+### Connect to the virtual cluster
+
+After installing the virtual cluster, make sure the virtual-cluster is running via kubectl:
+
+```
+kubectl get po -n virtualcluster
+NAME                                                    READY   STATUS    RESTARTS   AGE
+coredns-d798c9dd-kq64p-x-kube-system-x-virtualcluster   1/1     Running   0          3d17h
+virtualcluster-0                                        2/2     Running   0          3d17h
+```
+
+Retrieve the kubeconfig via kubectl:
+```
+kubectl exec virtualcluster-0 --namespace virtualcluster -c syncer -- cat /root/.kube/config > kubeconfig.yaml
+```
+
+Forward the virtual cluster api port to localhost:
+```
+kubectl port-forward test-0 -n vcluster-test 8443:8443
+Forwarding from 127.0.0.1:8443 -> 8443
+Forwarding from [::1]:8443 -> 8443
+```
+
+Now you can access the virtual cluster via kubectl:
+```
+kubectl --kubeconfig kubeconfig.yaml get namespaces
+NAME              STATUS   AGE
+default           Active   83s
+kube-system       Active   83s
+kube-public       Active   83s
+kube-node-lease   Active   83s
+```
+
+Congratulations, you now have a fully functional virtual kubernetes cluster!
+
+## Delete the virtual cluster
+
+To delete a virtual cluster and its created resources in the host cluster, you just have to delete the helm chart:
+```
+helm delete virtualcluster -n virtualcluster
+```
