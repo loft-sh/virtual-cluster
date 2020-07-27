@@ -1,6 +1,6 @@
 # Virtual Kubernetes Cluster
 
-Virtual Kubernetes Cluster are fully functional Kubernetes clusters but they run inside a namespace of another cluster. Virtual Clusters are a part of [loft](https://loft.sh) (see [loft documentation](https://loft.sh/docs/vclusters/basics) for more information)
+Virtual Kubernetes Clusters are fully functional Kubernetes clusters but they run inside a namespace of another cluster. Virtual Clusters are a part of [loft](https://loft.sh) (see [loft documentation](https://loft.sh/docs/vclusters/basics) for more information)
 
 ## Why Virtual Clusters?
 
