@@ -57,6 +57,7 @@ Create a values.yaml with:
 <details>
 <summary><b>Host Kubernetes v1.16</b></summary>
 <br>
+  
 ```
 virtualCluster:
   image: rancher/k3s:v1.16.13-k3s1
@@ -81,12 +82,13 @@ storage:
 #syncer:
 #  extraArgs: ["--disable-sync-resources=ingresses"]
 ```
-<br>
+
 </details>
 
 <details>
 <summary><b>Host Kubernetes v1.17</b></summary>
 <br>
+
 ```
 virtualCluster:
   image: rancher/k3s:v1.17.9-k3s1
@@ -111,12 +113,13 @@ storage:
 #syncer:
 #  extraArgs: ["--disable-sync-resources=ingresses"]
 ```
-<br>
+
 </details>
 
 <details>
 <summary><b>Host Kubernetes v1.18</b></summary>
 <br>
+
 ```
 virtualCluster:
   image: rancher/k3s:v1.18.6-k3s1
@@ -130,7 +133,7 @@ storage:
 #syncer:
 #  extraArgs: ["--disable-sync-resources=ingresses"]
 ```
-<br>
+
 </details>
 
 Then run:
