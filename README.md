@@ -16,14 +16,129 @@ Virtual clusters:
 
 The basic idea of a virtual cluster is to spin up an incomplete new Kubernetes cluster within an existing cluster and sync certain core resources between the two clusters to make the virtual cluster fully functional. The virtual cluster itself only consists of the core Kubernetes components: API server, controller manager and etcd. Besides some core kubernetes resources like pods, services, persistentvolumeclaims etc. that are needed for actual execution, all other kubernetes resources (like deployments, replicasets, resourcequotas, clusterroles, crds, apiservices etc.) are purely handled within the virtual cluster and NOT synced to the host cluster. This makes it possible to allow each user access to an complete own kubernetes cluster with full functionality, while still being able to separate them in namespaces in the actual host cluster.
 
-- A virtual Kubernetes cluster in loft is tied to a single namespace. The virtual cluster and hypervisor run within a single pod that consists of two parts:
+- A virtual Kubernetes cluster is tied to a single namespace. The virtual cluster and hypervisor run within a single pod that consists of two parts:
 - a k3s instance which contains the Kubernetes control plane (API server, controller manager and etcd) for the virtual cluster
 an instance of a virtual cluster hypervisor which is mainly responsible for syncing cluster resources between the k3s powered virtual cluster and the underlying host cluster
 
+![virtual cluster architecture](https://loft.sh/docs/media/ui/vclusters/vcluster-architecture.png)
+
 ## Install
+
+### Find out host cluster Service CIDR
 
 In order to install virtual cluster you need to find out the Service CIDR of your host cluster. This can be done by creating a service with a faulty ClusterIP in the host cluster:
 
 ```
+apiVersion: v1
+kind: Service
+metadata:
+  name: faulty-service
+spec:
+  clusterIP: 1.1.1.1
+  ports:
+  - port: 80
+    protocol: TCP
+```
+
+Then create the service via kubectl:
 
 ```
+kubectl apply -f mysecret.yaml
+The Service "faulty-service" is invalid: spec.clusterIP: Invalid value: "1.1.1.1": provided IP is not in the valid range. The range of valid IPs is 10.96.0.0/12
+```
+
+The error message shows the correct Service CIDR of the cluster, in this case `10.96.0.0/12`
+
+### Install Virtual Cluster via helm
+
+To start a new virtual cluster in any given namespace, you can use helm.
+
+Create a values.yaml with:
+<details>
+<summary><b>Host Kubernetes v1.16</b></summary>
+<br>
+```
+virtualCluster:
+  image: rancher/k3s:v1.16.13-k3s1
+  extraArgs:
+    - --service-cidr=10.96.0.0/12 # THE CLUSTER SERVICE CIDR HERE
+  baseArgs:
+    - server
+    - --write-kubeconfig=/k3s-config/kube-config.yaml
+    - --data-dir=/data
+    - --no-deploy=traefik,servicelb,metrics-server,local-storage
+    - --disable-network-policy
+    - --disable-agent
+    - --disable-scheduler
+    - --disable-cloud-controller
+    - --flannel-backend=none
+    - --kube-controller-manager-arg=controllers=*,-nodeipam,-nodelifecycle,-persistentvolume-binder,-attachdetach,-persistentvolume-expander,-cloud-node-lifecycle
+storage:
+  size: 5Gi
+
+# If you don't want to sync ingresses from the vCluster to 
+# the host cluster uncomment the next lines
+#syncer:
+#  extraArgs: ["--disable-sync-resources=ingresses"]
+```
+<br>
+</details>
+
+<details>
+<summary><b>Host Kubernetes v1.17</b></summary>
+<br>
+```
+virtualCluster:
+  image: rancher/k3s:v1.17.9-k3s1
+  extraArgs:
+    - --service-cidr=10.96.0.0/12 # THE CLUSTER SERVICE CIDR HERE
+  baseArgs:
+    - server
+    - --write-kubeconfig=/k3s-config/kube-config.yaml
+    - --data-dir=/data
+    - --no-deploy=traefik,servicelb,metrics-server,local-storage
+    - --disable-network-policy
+    - --disable-agent
+    - --disable-scheduler
+    - --disable-cloud-controller
+    - --flannel-backend=none
+    - --kube-controller-manager-arg=controllers=*,-nodeipam,-nodelifecycle,-persistentvolume-binder,-attachdetach,-persistentvolume-expander,-cloud-node-lifecycle
+storage:
+  size: 5Gi
+
+# If you don't want to sync ingresses from the vCluster to 
+# the host cluster uncomment the next lines
+#syncer:
+#  extraArgs: ["--disable-sync-resources=ingresses"]
+```
+<br>
+</details>
+
+<details>
+<summary><b>Host Kubernetes v1.18</b></summary>
+<br>
+```
+virtualCluster:
+  image: rancher/k3s:v1.18.6-k3s1
+  extraArgs:
+    - --service-cidr=10.96.0.0/12 # THE CLUSTER SERVICE CIDR HERE
+storage:
+  size: 5Gi
+
+# If you don't want to sync ingresses from the vCluster to 
+# the host cluster uncomment the next lines
+#syncer:
+#  extraArgs: ["--disable-sync-resources=ingresses"]
+```
+<br>
+</details>
+
+Then run:
+```
+helm install virtualcluster virtualcluster --repo https://charts.devspace.sh/ \
+  --namespace virtualcluster \
+  --values values.yaml \
+  --create-namespace \
+  --wait
+```
+
