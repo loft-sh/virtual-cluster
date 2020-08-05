@@ -165,7 +165,7 @@ kubectl exec virtualcluster-0 --namespace virtualcluster -c syncer -- cat /root/
 
 Forward the virtual cluster api port to localhost:
 ```
-kubectl port-forward test-0 -n vcluster-test 8443:8443
+kubectl port-forward test-0 -n virtualcluster 8443:8443
 Forwarding from 127.0.0.1:8443 -> 8443
 Forwarding from [::1]:8443 -> 8443
 ```
