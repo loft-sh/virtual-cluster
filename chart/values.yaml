@@ -10,7 +10,7 @@ syncer:
   resources: {}
 
 virtualCluster:
-  image: rancher/k3s:v1.18.4-k3s1
+  image: rancher/k3s:v1.18.6-k3s1
   command:
     - /bin/k3s
   baseArgs:
