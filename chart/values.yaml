@@ -41,6 +41,6 @@ serviceAccount:
 
 rbac:
   clusterRole:
-    create: true
+    create: false
   role:
     create: true
