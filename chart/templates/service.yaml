@@ -11,7 +11,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: virtualcluster
+    - name: https
       port: 443
       targetPort: 8443
       protocol: TCP

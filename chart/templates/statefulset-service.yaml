@@ -10,7 +10,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   ports:
-    - name: virtualcluster
+    - name: https
       port: 443
       targetPort: 8443
       protocol: TCP
