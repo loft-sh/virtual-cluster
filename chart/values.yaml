@@ -9,7 +9,7 @@ syncer:
       name: data
   resources: {}
 
-virtualCluster:
+vcluster:
   image: rancher/k3s:v1.19.1-k3s1
   command:
     - /bin/k3s

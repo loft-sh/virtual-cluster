@@ -1,6 +1,6 @@
 apiVersion: v2
-name: virtualcluster
-description: A virtual kubernetes cluster
+name: vcluster
+description: vcluster - Virtual Kubernetes Clusters
 
 # A chart can be either an 'application' or a 'library' chart.
 #

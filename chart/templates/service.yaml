@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: virtualcluster
+    app: vcluster
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -16,5 +16,5 @@ spec:
       targetPort: 8443
       protocol: TCP
   selector:
-    app: virtualcluster
+    app: vcluster
     release: {{ .Release.Name }}

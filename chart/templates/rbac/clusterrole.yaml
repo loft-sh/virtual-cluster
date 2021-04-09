@@ -2,9 +2,9 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "virtualcluster.clusterRoleName" . }}
+  name: {{ template "vcluster.clusterRoleName" . }}
   labels:
-    app: virtualcluster
+    app: vcluster
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"

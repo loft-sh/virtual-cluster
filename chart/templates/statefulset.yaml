@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: virtualcluster
+    app: vcluster
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -13,7 +13,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: virtualcluster
+      app: vcluster
       release: {{ .Release.Name }}
   volumeClaimTemplates:
     - metadata:
@@ -27,36 +27,36 @@ spec:
   template:
     metadata:
       labels:
-        app: virtualcluster
+        app: vcluster
         release: {{ .Release.Name }}
     spec:
       terminationGracePeriodSeconds: 10
       serviceAccountName: vc-{{ .Release.Name }}
       containers:
-      - image: {{ .Values.virtualCluster.image }}
-        name: virtual-cluster
+      - image: {{ .Values.vcluster.image }}
+        name: vcluster
         command:
-          {{- range $f := .Values.virtualCluster.command }}
+          {{- range $f := .Values.vcluster.command }}
           - {{ $f | quote }}
           {{- end }}
         args:
-          {{- range $f := .Values.virtualCluster.baseArgs }}
+          {{- range $f := .Values.vcluster.baseArgs }}
           - {{ $f | quote }}
           {{- end }}
-          {{- range $f := .Values.virtualCluster.extraArgs }}
+          {{- range $f := .Values.vcluster.extraArgs }}
           - {{ $f | quote }}
           {{- end }}
         env:
-{{ toYaml .Values.virtualCluster.env | indent 10 }}
+{{ toYaml .Values.vcluster.env | indent 10 }}
         volumeMounts:
-{{ toYaml .Values.virtualCluster.volumeMounts | indent 10 }}
+{{ toYaml .Values.vcluster.volumeMounts | indent 10 }}
         resources:
-{{ toYaml .Values.virtualCluster.resources | indent 10 }}
+{{ toYaml .Values.vcluster.resources | indent 10 }}
       - name: syncer
         {{- if .Values.syncer.image }}
         image: "{{ .Values.syncer.image }}"
         {{- else }}
-        image: "loftsh/virtual-cluster:{{ .Chart.Version }}"
+        image: "loftsh/vcluster:{{ .Chart.Version }}"
         {{- end }}
         {{- if not .Values.syncer.noArgs }}
         args:
