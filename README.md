@@ -1,3 +1,12 @@
+---
+---
+
+# THIS PROJECT HAS BEEN MOVED TO 
+# [https://github.com/loft-sh/vcluster](https://github.com/loft-sh/vcluster)
+
+---
+---
+
 # Virtual Kubernetes Cluster
 
 Virtual Kubernetes Clusters are fully functional Kubernetes clusters but they run inside a namespace of another cluster. Virtual Clusters are a part of [loft](https://loft.sh) (see [loft documentation](https://loft.sh/docs/vclusters/basics) for more information)
