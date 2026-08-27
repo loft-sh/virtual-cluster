@@ -1,5 +1,3 @@
----
-
 # Archived
 
 This repository is the original prototype and is no longer maintained.
